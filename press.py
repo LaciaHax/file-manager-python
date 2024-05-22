@@ -41,7 +41,7 @@ class User(UserMixin):
     def get_id(self):
         return self.username
 
-users = {'admin': User('admin', 'godbless1180')}
+users = {'admin': User('admin', 'admin')} # dbなり自分でこのまま追加するなりしてください
 
 @login_manager.user_loader
 def load_user(user_id):
