@@ -13,7 +13,20 @@ import string
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
+
+def generate_secret_key(length=512):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choice(characters) for _ in range(length))
+
+secret_key_path = 'prvkey.txt'
+if os.path.exists(secret_key_path):
+    with open(secret_key_path, 'r') as file:
+        app.config['SECRET_KEY'] = file.read()
+else:
+    app.config['SECRET_KEY'] = generate_secret_key()
+    with open(secret_key_path, 'w') as file:
+        file.write(app.config['SECRET_KEY'])
+app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=7)
 bootstrap = Bootstrap(app)
 
 login_manager = LoginManager()
@@ -28,7 +41,6 @@ class User(UserMixin):
     def get_id(self):
         return self.username
 
-# Simulated user database
 users = {'admin': User('admin', 'godbless1180')}
 
 @login_manager.user_loader
@@ -40,10 +52,8 @@ def pathlib_path_parent(file_path):
 
 app.jinja_env.filters['pathlib_path_parent'] = pathlib_path_parent
 
-# Base directory
 BASE_DIR = './'
 
-# Ensure the base directory exists
 if not os.path.exists(BASE_DIR):
     os.makedirs(BASE_DIR)
 
@@ -196,3 +206,4 @@ def before_request():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
