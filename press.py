@@ -1,14 +1,16 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, send_file, jsonify
-from flask_bootstrap import Bootstrap
-from flask_wtf import FlaskForm
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_wtf import FlaskForm
+from flask_bootstrap import Bootstrap
+from werkzeug.utils import secure_filename
 from wtforms import FileField, SubmitField, StringField, TextAreaField
 from wtforms.validators import DataRequired
-import os
-import subprocess
-from werkzeug.utils import secure_filename
+from datetime import timedelta
 from pathlib import Path
-from jinja2 import Environment
+import subprocess
+import random
+import string
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
